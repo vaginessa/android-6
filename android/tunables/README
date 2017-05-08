@@ -1,0 +1,7 @@
+THIS DIR CONSISTS OF SCRIPT FOR ANDROID (TUNABLES) SUCH AS OOM KILLER OR OTHER STUFF
+
+The scripts are completely dynamic, so you can put them in /system/init.d or /system/su.d for execution on boot
+
+They will detect whether you have the support or not. if you need space, do that check urself and edit the script accordingly
+
+Remember to do the correct chmods!
