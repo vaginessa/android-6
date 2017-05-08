@@ -1,0 +1,71 @@
+#!/system/bin/sh
+# List wifi passwords
+# Uses GREP busybox applet
+#=======================================================================#
+#  This program is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+#  GNU General Public License for more details.
+#  You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#=======================================================================#
+
+ssid="grep ssid="*" /data/misc/wifi/wpa_supplicant.conf" > dev/null
+psk="grep psk="*" /data/misc/wifi/wpa_supplicant.conf" > dev/null
+key_mgmt="grep key_mgmt="*" /data/misc/wifi/wpa_supplicant.conf" > dev/null
+
+while true; do
+	busybox clear
+		busybox echo ""
+		busybox echo ""
+		busybox echo "1. Show all wifi networks and their passwords"
+		busybox echo "2. Donation url"
+		busybox echo ""
+		busybox echo -n "Now choose:   "            
+	read character
+case $character in 
+1)while true; do
+	busybox clear;
+		busybox echo ""
+		busybox echo "Wifi names"
+		$ssid
+		busybox echo ""
+		busybox echo "wifi passwords"
+		$psk
+		busybox echo ""
+		busybox echo "Security type"
+		$key_mgmt
+		busybox echo ""
+	busybox echo -n " Options:
+[ Export to SD = 1 | Go Back = 2 ]: "
+read option
+if [ $option -eq 1 ]; then
+	busybox echo ""
+	busybox echo "Wifi names" > /sdcard/PASS.export
+		busybox grep ssid /data/misc/wifi/wpa_supplicant.conf >> /sdcard/PASS.export
+	busybox echo "" >> /sdcard/PASS.export
+	busybox echo "Wifi passwords" >> /sdcard/PASS.export
+		busybox grep psk /data/misc/wifi/wpa_supplicant.conf >> /sdcard/PASS.export
+	busybox echo "" >> /sdcard/PASS.export
+	busybox echo "Security type" >> /sdcard/PASS.export
+		busybox grep key_mgmt /data/misc/wifi/wpa_supplicant.conf >> /sdcard/PASS.export
+	busybox echo "Exporting finished"
+		busybox sleep 1
+			break
+	else
+		break
+	fi
+done;;
+2)while true; do
+busybox clear;
+su -c "LD_LIBRARY_PATH=/vendor/lib:/system/lib am start http://forum.xda-developers.com/donatetome.php?u=5514152"
+busybox clear
+break
+done;;
+*)busybox clear;
+busybox echo "#Invalid Option, please try again"
+busybox sleep 2
+esac
+done
